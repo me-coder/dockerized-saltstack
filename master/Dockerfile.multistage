@@ -1,0 +1,24 @@
+# Create base image for with salt-master installed
+FROM centos:8 as base
+WORKDIR /opt/build
+RUN yum install -y --nogpgcheck epel-release && \
+    yum install -y --nogpgcheck https://repo.saltstack.com/py3/redhat/salt-py3-repo-3002.el8.noarch.rpm && \
+    yum update -y && \
+    yum install -y salt-master && \
+    yum clean all && \
+    rm -rf /var/cache/yum
+
+# Configure the salt-master-image
+FROM base as salt-master-config
+WORKDIR /opt/build
+# RUN sed -i "s|#auto_accept: False|auto_accept: True|g" /etc/salt/master
+RUN mkdir -p {"/var/log/salt/","/etc/salt/master.d/"} && echo "auto_accept: True"|tee /etc/salt/master.d/dockerized-salt-master.conf
+RUN hostnamectl set-hostname salt-master
+
+# Bake the salt-master image
+FROM salt-master-config as centos8-salt-master
+LABEL description="salt-minion version 3002 on CentOS-8 container"
+EXPOSE 4505
+EXPOSE 4506
+ENTRYPOINT ["salt-master", "-d", "--log-file=/var/log/salt/master.log", "--log-file-level=info"]
+CMD ["/bin/bash"]
