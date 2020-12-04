@@ -8,5 +8,5 @@ RUN ["/bin/bash", "/tmp/bootstrap.sh", "--minion"]
 
 EXPOSE 4505
 EXPOSE 4506
-ENTRYPOINT ["salt-master", "-d", "--log-file=/var/log/salt/master.log", "--log-file-level=info"]
+ENTRYPOINT ["/usr/bin/salt-minion", "-d", "--log-file=/var/log/salt/minion.log", "--log-file-level=info"]
 CMD ["/bin/bash"]
