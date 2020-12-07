@@ -6,7 +6,5 @@ COPY bootstrap.sh /tmp/
 
 RUN ["/bin/bash", "/tmp/bootstrap.sh", "--minion"]
 
-EXPOSE 4505
-EXPOSE 4506
 ENTRYPOINT ["/usr/bin/salt-minion", "-d", "--log-file=/var/log/salt/minion.log", "--log-file-level=info"]
 CMD ["/bin/bash"]
