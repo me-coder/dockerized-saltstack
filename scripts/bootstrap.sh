@@ -14,6 +14,8 @@ function install_minion {
         rm -rf /var/cache/dnf
 
     mkdir -p {"/var/log/salt/","/etc/salt/minion.d/"} && echo "master: salt-master" |tee /etc/salt/minion.d/dockerized-salt-minion.conf
+
+    echo "/usr/bin/salt-minion", "-d", "--log-file=/var/log/salt/minion.log", "--log-file-level=info" >~/start-minion.sh
 }
 
 function install_master {
@@ -21,6 +23,7 @@ function install_master {
         dnf install -y --nogpgcheck https://repo.saltstack.com/py3/redhat/salt-py3-repo-3002.el8.noarch.rpm && \
         dnf update -y && \
         dnf install -y salt-master && \
+        dnf autoremove && \
         dnf clean all && \
         rm -rf /var/cache/dnf
 

@@ -6,5 +6,5 @@ COPY bootstrap.sh /tmp/
 
 RUN ["/bin/bash", "/tmp/bootstrap.sh", "--minion"]
 
-ENTRYPOINT ["/usr/bin/salt-minion", "-d", "--log-file=/var/log/salt/minion.log", "--log-file-level=info"]
+#ENTRYPOINT ["/usr/bin/salt-minion", "-d", "--log-file=/var/log/salt/minion.log", "--log-file-level=info"]
 CMD ["/bin/bash"]
