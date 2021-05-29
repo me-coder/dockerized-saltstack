@@ -1,6 +1,6 @@
 FROM centos:8 as base
 
-LABEL description="salt-minion version 3002 on CentOS-8 container"
+LABEL description="salt-minion version 3003 on CentOS-8 container"
 
 COPY bootstrap.sh /tmp/
 

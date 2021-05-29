@@ -1,10 +1,11 @@
-FROM centos:8 as base
+FROM centos:7.8.2003 as base
 WORKDIR /opt/build
 RUN yum install -y --nogpgcheck epel-release && \
-    yum install -y --nogpgcheck https://repo.saltstack.com/py3/redhat/salt-py3-repo-3002.el8.noarch.rpm && \
+    rpm --import https://repo.saltproject.io/py3/redhat/7/x86_64/3003/SALTSTACK-GPG-KEY.pub && \
+    curl -fsSL https://repo.saltproject.io/py3/redhat/7/x86_64/3003.repo | tee /etc/yum.repos.d/salt.repo && \
     yum update -y && \
+    yum clean expire-cache && \
     yum install -y salt-minion && \
-    yum clean all && \
     rm -rf /var/cache/yum
 
 # Configure the salt-minion-image
@@ -14,7 +15,7 @@ WORKDIR /opt/build
 RUN mkdir -p {"/var/log/salt/","/etc/salt/minion.d/"} && echo "master: salt-master" |tee /etc/salt/minion.d/dockerized-salt-minion.conf
 
 # Bake the salt-minion image
-FROM salt-minion-config as centos8-salt-minion
-LABEL description="salt-minion version 3002 on CentOS-8 container"
+FROM salt-minion-config as centos-salt-minion
+LABEL description="salt-minion version 3003 on CentOS container"
 ENTRYPOINT ["/usr/bin/salt-minion", "-d", "--log-file=/var/log/salt/minion.log", "--log-file-level=info"]
 CMD ["/bin/bash"]
